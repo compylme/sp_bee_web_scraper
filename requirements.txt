@@ -1,0 +1,5 @@
+gunicorn==21.2.0
+selenium==4.7.0
+chromedriver-binary==116.0.5845.42.0
+pytz==2023.3.post1
+flask==2.3.3

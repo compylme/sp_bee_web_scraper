@@ -1,4 +1,4 @@
-#!/Users/admin/Documents/python/sp_bee_wb_scraper/venv/bin/python3.11
+#!/Users/admin/Documents/python/web_scraper/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
