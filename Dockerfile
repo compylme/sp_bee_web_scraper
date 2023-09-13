@@ -40,5 +40,7 @@ ENV APP_HOME /APP_HOME
 WORKDIR $APP_HOME
 COPY . .
 
+EXPOSE 8080
+
 # Start your application
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
