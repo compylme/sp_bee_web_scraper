@@ -18,7 +18,6 @@ this_date = datetime.datetime.now()
 
 doc_id = str(uuid.uuid4())
 
-
 @app.route('/')
 def scraper():
     try:
@@ -49,8 +48,7 @@ def scraper():
 
             return {
                 "anagram_letters": stripped_anagram,
-                "mandatory_letter": stripped_mandatory,
-                
+                "mandatory_letter": stripped_mandatory,  
             }
         except Exception as e:
             print("An error occured while scraping:", str (e))
@@ -61,11 +59,8 @@ def scraper():
         return None
 
 letter_dictionary = scraper()
-
 anagram,mandatory = letter_dictionary.values()
-
 payload_data = {"date": str(this_date) , "letters": anagram, "mandatory": mandatory}
-print(payload_data)
     
 if __name__ == '__main__':
     app.run()
