@@ -27,6 +27,16 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils
 
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates curl gnupg && \
+    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    apt-get update && \
+    apt-get install -y google-cloud-sdk
+
+
+
+
 # Download and install Google Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN dpkg -i google-chrome-stable_current_amd64.deb
@@ -41,6 +51,15 @@ WORKDIR $APP_HOME
 COPY . .
 
 EXPOSE 8080
+
+# Set environment variables
+ENV GOOGLE_APPLICATION_CREDENTIALS="service-account-key.json"
+
+
+# Copy the Python script and service account key into the container
+COPY service-account-key.json .
+
+RUN gcloud auth activate-service-account --key-file=service-account-key.json
 
 # Start your application
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
