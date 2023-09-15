@@ -49,10 +49,12 @@ def scraper():
             stripped_anagram = remove_spaces(anagram_letters_value)
             stripped_mandatory = remove_spaces(mandatory_letter_value)
 
+            print("The letters have been scraped")
+
             return {
                 "anagram_letters": stripped_anagram,
                 "mandatory_letter": stripped_mandatory,  
-            }
+            }            
         except Exception as e:
             print("An error occured while scraping:", str (e))
         finally:
@@ -60,18 +62,14 @@ def scraper():
     except Exception as e:
         print("An error occureed while initializing the WebDriver:", str(e))
         return None
+    finally:
+        driver.quit()
 
 letter_dictionary = scraper()
 anagram,mandatory = letter_dictionary.values()
 payload_data = {"date": str(this_date) , "letters": anagram, "mandatory": mandatory}
-    
+insert_letters_db(daily_letters, payload_data, doc_id)
+
+
 if __name__ == '__main__':
-    print("Running the main function", flush=True)
-    app.run()
-    print("Inserting the letters into the database", flush=True)
-    try:
-        insert_letters_db(daily_letters, payload_data, doc_id)
-    except:
-        print("An exception occured", flush=True)
-    finally:
-        print("The letters have been inserted into the database", flush=True)
+    app.run(host='0.0.0.0', port=8080)
