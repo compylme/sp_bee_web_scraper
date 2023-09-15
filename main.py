@@ -4,16 +4,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from helpers.functions import insert_letters_db, remove_spaces
-from google.cloud import firestore
 import datetime
 import pytz
 import chromedriver_binary
 import uuid
+import logging
 
 app = Flask(__name__)
-db = firestore.Client(project = "spelling-bee-web-scraper")
+app.logger.setLevel(logging.DEBUG) 
+stream_handler = logging.StreamHandler()
+app.logger.addHandler(stream_handler)
 
-daily_letters = "spellingbee letters"
+
+daily_letters = "spellingbee-letters-docker"
 this_date = datetime.datetime.now()
 
 doc_id = str(uuid.uuid4())
@@ -63,8 +66,12 @@ anagram,mandatory = letter_dictionary.values()
 payload_data = {"date": str(this_date) , "letters": anagram, "mandatory": mandatory}
     
 if __name__ == '__main__':
+    print("Running the main function", flush=True)
     app.run()
+    print("Inserting the letters into the database", flush=True)
     try:
         insert_letters_db(daily_letters, payload_data, doc_id)
     except:
-        print("An exception occured")
+        print("An exception occured", flush=True)
+    finally:
+        print("The letters have been inserted into the database", flush=True)
