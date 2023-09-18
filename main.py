@@ -3,9 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from helpers.functions import insert_letters_db, remove_spaces
-import datetime
-import pytz
+from helpers.functions import insert_letters_db, remove_spaces, myTimezones
 import chromedriver_binary
 import uuid
 import logging
@@ -17,7 +15,8 @@ app.logger.addHandler(stream_handler)
 
 
 daily_letters = "spellingbee-letters-docker"
-this_date = datetime.datetime.now()
+date = myTimezones.anchorageTime()
+myTimestamp = myTimezones.timeStamp()
 
 doc_id = str(uuid.uuid4())
 
@@ -31,13 +30,8 @@ def scraper():
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(options=options)
 
-        usEastTimezone = pytz.timezone('America/Anchorage')
-        current_date = datetime.datetime.now(usEastTimezone)
-        formatted_time = current_date.strftime("%Y/%m/%d")
-        formatted_date = str(formatted_time).replace("-", "/")
-
         url ="https://www.nytimes.com/date/crosswords/spelling-bee-forum.html"
-        formatted_url = url.replace("date", formatted_date)
+        formatted_url = url.replace("date", date)
 
         driver.get(formatted_url)
         try: 
@@ -67,7 +61,7 @@ def scraper():
 
 letter_dictionary = scraper()
 anagram,mandatory = letter_dictionary.values()
-payload_data = {"date": str(this_date) , "letters": anagram, "mandatory": mandatory}
+payload_data = {"timestamp": myTimestamp , "letters": anagram, "mandatory": mandatory}
 insert_letters_db(daily_letters, payload_data, doc_id)
 
 
