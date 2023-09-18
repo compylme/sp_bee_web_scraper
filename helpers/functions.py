@@ -1,5 +1,7 @@
 from firebase_admin import firestore, credentials
 import firebase_admin
+import pytz
+import datetime
 
 cred = credentials.Certificate('service-account-key.json')
 firebase_admin.initialize_app(cred)
@@ -18,3 +20,14 @@ def insert_letters_db(collection_name, payload, document_id):
 
 def remove_spaces(string):
     return string.replace(" ", "")
+
+
+class myTimezones:
+    
+    def anchorageTime():
+        usEastTimezone = pytz.timezone('America/Anchorage')
+        current_date = datetime.datetime.now(usEastTimezone)
+        formatted_time = current_date.strftime("%Y/%m/%d")
+        formatted_date = str(formatted_time).replace("-", "/")
+
+        return formatted_date
