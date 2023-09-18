@@ -31,3 +31,6 @@ class myTimezones:
         formatted_date = str(formatted_time).replace("-", "/")
 
         return formatted_date
+    
+    def timeStamp():
+        return datetime.datetime.now()
